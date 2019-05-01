@@ -112,10 +112,6 @@ public class TankFrame extends Frame {
 		g.drawString("敌人的数量:" + ResourceMgr.TANK_LIST.size(), 10, 80);
 		g.drawString("消灭敌人数:" + ResourceMgr.countNumber, 10, 100);
 		g.setColor(c);
-
-		
-		// 画自己
-//		myTank.paint(g);
 		
 		// 画子弹
 		for(int i = 0; i < ResourceMgr.BULLET_LIST.size(); i++) {

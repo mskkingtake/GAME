@@ -3,7 +3,7 @@ package tank.part;
 import java.awt.Graphics;
 import java.util.Random;
 
-import tank.common.CommonUtil;
+import tank.common.ResourceMgr;
 import tank.common.Dir;
 
 public class Tank {
@@ -57,9 +57,22 @@ public class Tank {
 	
 
 	public void paint(Graphics g) {
-		move();
+		switch(dir) {
+		case LEFT:
+			g.drawImage(ResourceMgr.tankL, x, y, null);
+			break;
+		case UP:
+			g.drawImage(ResourceMgr.tankU, x, y, null);
+			break;
+		case RIGHT:
+			g.drawImage(ResourceMgr.tankR, x, y, null);
+			break;
+		case DOWN:
+			g.drawImage(ResourceMgr.tankD, x, y, null);
+			break;
+		}
 		
-		g.fillRect(x, y, 50, 50);
+		move();
 	}
 	
 	/**
@@ -72,16 +85,16 @@ public class Tank {
 		
 		switch (dir) {
 		case LEFT:
-			x -= CommonUtil.TANK_SPEED;
+			x -= ResourceMgr.TANK_SPEED;
 			break;
 		case UP:
-			y -= CommonUtil.TANK_SPEED;;
+			y -= ResourceMgr.TANK_SPEED;;
 			break;
 		case RIGHT:
-			x += CommonUtil.TANK_SPEED;;
+			x += ResourceMgr.TANK_SPEED;;
 			break;
 		case DOWN:
-			y += CommonUtil.TANK_SPEED;;
+			y += ResourceMgr.TANK_SPEED;;
 			break;
 		}
 		

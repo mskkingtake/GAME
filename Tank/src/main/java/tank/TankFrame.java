@@ -12,10 +12,14 @@ import tank.common.KeyListener;
 import tank.common.ResourceMgr;
 import tank.common.WindowListener;
 import tank.part.Bullet;
-import tank.part.Explode;
 import tank.part.Tank;
 
 public class TankFrame extends Frame {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	// 我的坦克
 	Tank myTank = new Tank(100,100, Dir.LEFT, false, Group.GOOD);
@@ -28,6 +32,9 @@ public class TankFrame extends Frame {
 		setResizable(false);
 		setTitle("筱士巍巍的坦克大战");
 		setVisible(true);
+		
+		ResourceMgr.myTank = myTank;
+		ResourceMgr.TANK_LIST.add(myTank);
 		
 		// 窗口监听器
 		addWindowListener(new WindowListener());
@@ -50,10 +57,28 @@ public class TankFrame extends Frame {
 		g.drawImage(offScreenImage, 0, 0, null);
 	}
 	
-	
-	
 	@Override
 	public void paint(Graphics g) {
+		if(!ResourceMgr.TANK_LIST.contains(myTank)) {
+			ResourceMgr.fpsCount--;
+		}
+		
+		if(ResourceMgr.fpsCount <= 0) {
+			Color c = g.getColor();
+			g.setColor(Color.WHITE);
+			g.drawString("消灭敌人数:" + ResourceMgr.countNumber, 200, 300);
+			g.drawString("再接再厉,今晚吃鸡:", 200, 350);
+			g.drawString("回车键再来一次", 200, 400);
+			g.setColor(c);
+			return;
+		}
+		
+		while(ResourceMgr.TANK_LIST.size() < ResourceMgr.tankNumber) {
+			int x = (int)(Math.random() * 800);
+			int y = (int)(Math.random() * 600);
+			ResourceMgr.TANK_LIST.add(new Tank(x, y, Dir.randomDir(), true, Group.BAD));
+		}
+		
 		for(Iterator<Bullet> it1 = ResourceMgr.BULLET_LIST.iterator(); it1.hasNext();) {
 			Bullet b1 = it1.next();
 			
@@ -70,15 +95,27 @@ public class TankFrame extends Frame {
 			}
 		}
 		
+		for(Iterator<Tank> it1 = ResourceMgr.TANK_LIST.iterator(); it1.hasNext();) {
+			Tank t1 = it1.next();
+			
+			for(Iterator<Tank> it2 = ResourceMgr.TANK_LIST.iterator(); it2.hasNext();) {
+				Tank t2 = it2.next();
+				if(t1 != t2) {
+					t1.collideWith(t2);
+				}
+			}
+		}
+		
 		Color c = g.getColor();
 		g.setColor(Color.WHITE);
 		g.drawString("子弹的数量:" + ResourceMgr.BULLET_LIST.size(), 10, 60);
 		g.drawString("敌人的数量:" + ResourceMgr.TANK_LIST.size(), 10, 80);
+		g.drawString("消灭敌人数:" + ResourceMgr.countNumber, 10, 100);
 		g.setColor(c);
 
 		
 		// 画自己
-		myTank.paint(g);
+//		myTank.paint(g);
 		
 		// 画子弹
 		for(int i = 0; i < ResourceMgr.BULLET_LIST.size(); i++) {

@@ -151,6 +151,10 @@ public class Bullet extends Part {
 				int yTemp = part.getY() + ResourceMgr.TANK_HEIGHT / 2 - ResourceMgr.BULLET_HEIGHT / 2 - 40;
 				
 				ResourceMgr.EXPLODE_LIST.add(new Explode(xTemp, yTemp));
+				
+				if(ResourceMgr.countNumber++ % 10 == 0) {
+					ResourceMgr.tankNumber++;
+				}
 			}
 		}
 	}

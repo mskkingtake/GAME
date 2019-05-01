@@ -13,6 +13,20 @@ import tank.part.Tank;
 
 public class ResourceMgr {
 	// 坦克图片
+	public static Tank myTank;
+	
+	// 坦克图片
+	public static int fpsCount = 30;
+	
+	// 坦克图片
+	public static int countNumber;
+	// 坦克图片
+	public static int tankNumber = 10;
+	
+	public static boolean RESET_FLAG = false;
+	
+	
+	// 坦克图片
 	public static BufferedImage tankL;
 	public static BufferedImage tankU; 
 	public static BufferedImage tankR; 

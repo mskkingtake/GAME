@@ -58,6 +58,23 @@ public class KeyListener extends KeyAdapter {
 			break;
 		case KeyEvent.VK_Z:
 			myTank.fire();
+			break;
+		case KeyEvent.VK_ENTER:
+			if(!ResourceMgr.TANK_LIST.contains(myTank)) {
+				ResourceMgr.BULLET_LIST.clear();
+				ResourceMgr.TANK_LIST.clear();
+				ResourceMgr.BULLET_LIST.clear();
+				ResourceMgr.tankNumber = 10;
+				ResourceMgr.countNumber = 0;
+				ResourceMgr.fpsCount = 30;
+				
+				myTank.setX(200);
+				myTank.setY(200);
+				myTank.setLiving(true);
+				ResourceMgr.TANK_LIST.add(myTank);
+				ResourceMgr.RESET_FLAG = false;
+			}
+			break;
 		default:
 			break;
 		}

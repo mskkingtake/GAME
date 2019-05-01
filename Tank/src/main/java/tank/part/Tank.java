@@ -1,5 +1,6 @@
 package tank.part;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
@@ -19,6 +20,7 @@ public class Tank extends Part{
 	private boolean dirChangeFlag = false;
 	private Group group;
 	private Rectangle rectangle;
+	private int fireTime = 1000;
 	
 	Random random = new Random();
 	
@@ -88,7 +90,13 @@ public class Tank extends Part{
 		this.rectangle = rectangle;
 	}
 	
-	
+	public boolean isLiving() {
+		return living;
+	}
+
+	public void setLiving(boolean living) {
+		this.living = living;
+	}
 	
 	
 
@@ -112,6 +120,13 @@ public class Tank extends Part{
 		case DOWN:
 			g.drawImage(ResourceMgr.tankD, x, y, null);
 			break;
+		}
+		
+		if(this == ResourceMgr.myTank) {
+			Color c = g.getColor();
+			g.setColor(Color.WHITE);
+			g.drawString("我的坦克", x , y);
+			g.setColor(c);
 		}
 		
 		move();
@@ -176,8 +191,10 @@ public class Tank extends Part{
 			}
 			
 			// 随机开火
-			if(CommonUtil.getRandomInt(1000) > 900) {
+			fireTime = fireTime + 7;
+			if(CommonUtil.getRandomInt(fireTime) > 900) {
 				fire();
+				fireTime = fireTime - 150;
 			}
 		}
 	}
@@ -186,6 +203,10 @@ public class Tank extends Part{
 	 * 坦克发射炮弹方法
 	 */
 	public void fire() {
+		if(!this.living) {
+			return;
+		}
+		
 		int xTemp = this.x;
 		int yTemp = this.y;
 		
@@ -207,7 +228,28 @@ public class Tank extends Part{
 		}
 		
 		ResourceMgr.BULLET_LIST.add(new Bullet(xTemp, yTemp, this.dir, this.group));
+	}
+	
+	/**
+	 * 碰撞检测
+	 * @param tank
+	 */
+	public void collideWith(Tank tank) {
+		if(this == ResourceMgr.myTank || tank == ResourceMgr.myTank) {
+			return;
+		}
 		
+		if (this.getRectangle().intersects(tank.getRectangle())) {
+			if(this.group != Group.GOOD) {
+				// 变更方向
+				Dir randomDir = Dir.randomDir();
+				if(this.dir != randomDir && tank.dir == randomDir) {
+					this.dir = randomDir;
+				}
+				
+				tank.setDir(Dir.getNegativeDir(this.dir));
+			}
+		}
 	}
 	
 	/**

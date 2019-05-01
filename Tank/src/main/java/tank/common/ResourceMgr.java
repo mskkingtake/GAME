@@ -8,6 +8,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import tank.part.Bullet;
+import tank.part.Explode;
 import tank.part.Tank;
 
 public class ResourceMgr {
@@ -58,6 +59,8 @@ public class ResourceMgr {
 	public static final int TANK_HEIGHT  = tankL.getHeight();
 	// 坦克速度
 	public static final int TANK_SPEED  = 5;
+	// 坦克的集合
+	public static List<Tank> TANK_LIST = new ArrayList<Tank>();
 
 	// 子弹宽度
 	public static final int BULLET_WIDTH = bulletL.getWidth();
@@ -65,11 +68,17 @@ public class ResourceMgr {
 	public static final int BULLET_HEIGHT  = bulletL.getHeight();
 	// 子弹速度
 	public static final int BULLET_SPEED  = 10;
-	
 	// 子弹的集合
 	public static List<Bullet> BULLET_LIST = new ArrayList<Bullet>();
+	
+	// 爆炸宽度
+	public static int EXPLODE_WIDTH = ResourceMgr.explodes[0].getWidth();
+	// 爆炸高度
+	public static int EXPLODE_HEIGHT = ResourceMgr.explodes[0].getHeight();
 	// 坦克的集合
-	public static List<Tank> TANK_LIST = new ArrayList<Tank>();
+	public static List<Explode> EXPLODE_LIST = new ArrayList<Explode>();
+	
+	
 	
 	
 	

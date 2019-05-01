@@ -7,7 +7,8 @@ import tank.common.Dir;
 import tank.common.Group;
 import tank.common.ResourceMgr;
 
-public class Bullet {
+public class Bullet extends Part {
+	private String name = "Bullet";
 	private int x;
 	private int y;
 	private Dir dir;
@@ -22,6 +23,14 @@ public class Bullet {
 		this.group = group;
 		
 		rectangle = new Rectangle(x, y, ResourceMgr.BULLET_WIDTH, ResourceMgr.BULLET_HEIGHT);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getX() {
@@ -105,15 +114,12 @@ public class Bullet {
 			break;
 		case UP:
 			y -= ResourceMgr.BULLET_SPEED;
-			;
 			break;
 		case RIGHT:
 			x += ResourceMgr.BULLET_SPEED;
-			;
 			break;
 		case DOWN:
 			y += ResourceMgr.BULLET_SPEED;
-			;
 			break;
 		}
 		
@@ -130,21 +136,30 @@ public class Bullet {
 	 * 碰撞检测
 	 * @param tank
 	 */
-	public void collideWith(Tank tank) {
-		if (this.group == tank.getGroup()) {
+	public void collideWith(Part part) {
+		if (this.group == part.getGroup()) {
 			return;
 		}
 
-		if (this.getRectangle().intersects(tank.getRectangle())) {
-			tank.die();
+		if (this.getRectangle().intersects(part.getRectangle())) {
+			part.die();
 			this.die();
+			
+			if("Tank".equals(part.getName())) {
+				// 计算坐标
+				int xTemp = part.getX() + ResourceMgr.TANK_WIDTH / 2 - ResourceMgr.BULLET_WIDTH / 2 - 20;
+				int yTemp = part.getY() + ResourceMgr.TANK_HEIGHT / 2 - ResourceMgr.BULLET_HEIGHT / 2 - 40;
+				
+				ResourceMgr.EXPLODE_LIST.add(new Explode(xTemp, yTemp));
+			}
 		}
 	}
 	
 	/**
 	 * 消亡事件
 	 */
-	private void die() {
+	@Override
+	public void die() {
 		this.living = false;
 	}
 }

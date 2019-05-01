@@ -9,7 +9,8 @@ import tank.common.Dir;
 import tank.common.Group;
 import tank.common.ResourceMgr;
 
-public class Tank {
+public class Tank extends Part{
+	private String name = "Tank";
 	private int x;
 	private int y;
 	private boolean moving = false;
@@ -29,6 +30,14 @@ public class Tank {
 		this.group = group;
 		
 		rectangle = new Rectangle(x, y, ResourceMgr.TANK_WIDTH, ResourceMgr.TANK_HEIGHT);
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public int getX() {
@@ -204,6 +213,7 @@ public class Tank {
 	/**
 	 * 消亡事件
 	 */
+	@Override
 	public void die() {
 		this.living = false;
 	}

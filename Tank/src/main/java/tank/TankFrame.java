@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import tank.common.Dir;
 import tank.common.Group;
@@ -13,6 +12,7 @@ import tank.common.KeyListener;
 import tank.common.ResourceMgr;
 import tank.common.WindowListener;
 import tank.part.Bullet;
+import tank.part.Explode;
 import tank.part.Tank;
 
 public class TankFrame extends Frame {
@@ -22,8 +22,6 @@ public class TankFrame extends Frame {
 	
 	Image offScreenImage = null;
 	
-	
-
 	TankFrame() {
 		setLocation(600, 100);
 		setSize(ResourceMgr.GAME_WIDTH, ResourceMgr.GAME_HEIGHT);
@@ -56,9 +54,19 @@ public class TankFrame extends Frame {
 	
 	@Override
 	public void paint(Graphics g) {
-		for(int i = 0; i < ResourceMgr.BULLET_LIST.size(); i++) {
-			for(int j = 0; j < ResourceMgr.TANK_LIST.size(); j++) {
-				ResourceMgr.BULLET_LIST.get(i).collideWith(ResourceMgr.TANK_LIST.get(j));
+		for(Iterator<Bullet> it1 = ResourceMgr.BULLET_LIST.iterator(); it1.hasNext();) {
+			Bullet b1 = it1.next();
+			
+			for(Iterator<Bullet> it2 = ResourceMgr.BULLET_LIST.iterator(); it2.hasNext();) {
+				Bullet b2 = it2.next();
+				if(b1 != b2) {
+					b1.collideWith(b2);
+				}
+			}
+			
+			for(Iterator<Tank> it2 = ResourceMgr.TANK_LIST.iterator(); it2.hasNext();) {
+				Tank b2 = it2.next();
+				b1.collideWith(b2);
 			}
 		}
 		
@@ -80,6 +88,11 @@ public class TankFrame extends Frame {
 		// 画坦克
 		for(int i = 0; i < ResourceMgr.TANK_LIST.size(); i++) {
 			ResourceMgr.TANK_LIST.get(i).paint(g);
+		}
+		
+		// 画坦克
+		for(int i = 0; i < ResourceMgr.EXPLODE_LIST.size(); i++) {
+			ResourceMgr.EXPLODE_LIST.get(i).paint(g);
 		}
 	}
 }

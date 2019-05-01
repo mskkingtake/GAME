@@ -5,9 +5,11 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import tank.common.ResourceMgr;
+import tank.common.Dir;
 import tank.common.KeyListener;
+import tank.common.ResourceMgr;
 import tank.common.WindowListener;
+import tank.part.Bullet;
 import tank.part.Tank;
 
 public class TankFrame extends Frame {
@@ -16,6 +18,8 @@ public class TankFrame extends Frame {
 	Tank myTank = new Tank(100,100);
 	
 	Image offScreenImage = null;
+	
+	Bullet bullet = new Bullet(100,100, Dir.RIGHT);
 
 	TankFrame() {
 		setSize(ResourceMgr.GAME_WIDTH, ResourceMgr.GAME_HEIGHT);
@@ -49,5 +53,6 @@ public class TankFrame extends Frame {
 	@Override
 	public void paint(Graphics g) {
 		myTank.paint(g);
+		bullet.paint(g);
 	}
 }

@@ -6,24 +6,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class ResourceMgr {
-	
-	// 游戏画面宽度
-	public static final int GAME_WIDTH = 600;
-	
-	// 游戏画面高度
-	public static final int GAME_HEIGHT  = 800;
-	
-	// 游戏画面宽度
-	public static final int TANK_WIDTH = 20;
-	
-	// 游戏画面高度
-	public static final int TANK_HEIGHT  = 20;
-	
-	
-	// 坦克速度
-	public static final int TANK_SPEED  = 5;
-	
-	
 	// 坦克图片
 	public static BufferedImage tankL;
 	public static BufferedImage tankU; 
@@ -38,6 +20,28 @@ public class ResourceMgr {
 	
 	// 爆炸样式
 	public static BufferedImage[] explodes = new BufferedImage[16];
+	
+	// 游戏画面宽度
+	public static final int GAME_WIDTH = 600;
+	// 游戏画面高度
+	public static final int GAME_HEIGHT  = 800;
+	
+	// 坦克宽度
+	public static final int TANK_WIDTH = 20;
+	// 坦克高度
+	public static final int TANK_HEIGHT  = 20;
+	// 坦克速度
+	public static final int TANK_SPEED  = 5;
+
+	// 坦克宽度
+	public static final int BULLET_WIDTH = 20;
+	// 坦克高度
+	public static final int BULLET_HEIGHT  = 20;
+	// 子弹速度
+	public static final int BULLET_SPEED  = 10;
+	
+	
+	
 	
 	static {
 		try {

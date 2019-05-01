@@ -3,6 +3,7 @@ package tank;
 import java.awt.Frame;
 
 import tank.common.CommonUtil;
+import tank.common.WindowListener;
 
 public class TankFrame extends Frame {
 
@@ -11,5 +12,8 @@ public class TankFrame extends Frame {
 		setResizable(false);
 		setTitle("筱士巍巍的坦克大战");
 		setVisible(true);
+		
+		
+		addWindowListener(new WindowListener());
 	}
 }

@@ -13,4 +13,8 @@ public class CommonUtil {
 	
 	// 游戏画面高度
 	public static final int TANK_HEIGHT  = 20;
+	
+	
+	// 坦克速度
+	public static final int TANK_SPEED  = 5;
 }

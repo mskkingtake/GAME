@@ -4,5 +4,9 @@ public enum Dir {
 	LEFT,
 	UP,
 	RIGHT,
-	DOWN
+	DOWN;
+	
+	public static Dir randomDir() {
+		return CommonUtil.random(Dir.class);
+	}
 }

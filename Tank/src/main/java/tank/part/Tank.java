@@ -1,22 +1,34 @@
 package tank.part;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.Random;
 
-import tank.common.ResourceMgr;
+import tank.common.CommonUtil;
 import tank.common.Dir;
+import tank.common.Group;
+import tank.common.ResourceMgr;
 
 public class Tank {
 	private int x;
 	private int y;
-	private boolean moving = true;
+	private boolean moving = false;
 	private Dir dir = Dir.DOWN;
+	private boolean living = true;
+	private boolean dirChangeFlag = false;
+	private Group group;
+	private Rectangle rectangle;
 	
 	Random random = new Random();
 	
-	public Tank(int x, int y) {
+	public Tank(int x, int y, Dir dir, Boolean moving, Group group) {
 		this.x = x;
 		this.y = y;
+		this.dir = dir;
+		this.moving = moving;
+		this.group = group;
+		
+		rectangle = new Rectangle(x, y, ResourceMgr.TANK_WIDTH, ResourceMgr.TANK_HEIGHT);
 	}
 	
 	public int getX() {
@@ -51,12 +63,33 @@ public class Tank {
 		this.dir = dir;
 	}
 	
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+	
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
+
+	public void setRectangle(Rectangle rectangle) {
+		this.rectangle = rectangle;
+	}
 	
 	
 	
 	
 
+	
+
 	public void paint(Graphics g) {
+		if(!living) {
+			ResourceMgr.TANK_LIST.remove(this);
+		}
+		
 		switch(dir) {
 		case LEFT:
 			g.drawImage(ResourceMgr.tankL, x, y, null);
@@ -85,27 +118,93 @@ public class Tank {
 		
 		switch (dir) {
 		case LEFT:
-			x -= ResourceMgr.TANK_SPEED;
+			if(x - ResourceMgr.TANK_SPEED < 0) {
+				x = 0;
+				dirChangeFlag = true;
+			} else {
+				x -= ResourceMgr.TANK_SPEED;
+			}
 			break;
 		case UP:
-			y -= ResourceMgr.TANK_SPEED;;
+			if(y - ResourceMgr.TANK_SPEED < 20) {
+				y = 20;
+				dirChangeFlag = true;
+			} else {
+				y -= ResourceMgr.TANK_SPEED;
+			}
 			break;
 		case RIGHT:
-			x += ResourceMgr.TANK_SPEED;;
+			if(x + ResourceMgr.TANK_SPEED + ResourceMgr.TANK_WIDTH > ResourceMgr.GAME_WIDTH) {
+				x = ResourceMgr.GAME_WIDTH - ResourceMgr.TANK_WIDTH;
+				dirChangeFlag = true;
+			} else {
+				x += ResourceMgr.TANK_SPEED;
+			}
 			break;
 		case DOWN:
-			y += ResourceMgr.TANK_SPEED;;
+			if(y + ResourceMgr.TANK_SPEED + ResourceMgr.TANK_HEIGHT > ResourceMgr.GAME_HEIGHT) {
+				y = ResourceMgr.GAME_HEIGHT - ResourceMgr.TANK_HEIGHT;
+				dirChangeFlag = true;
+			} else {
+				y += ResourceMgr.TANK_SPEED;
+			}
+			
 			break;
 		}
 		
-		if(random.nextInt(10) > 8) {
-			System.out.println("aaa");
-//			this.fire();
+		// 设置模型
+		rectangle.setLocation(x, y);
+		
+		if(this.group != Group.GOOD) {
+			// 变更方向
+			if(dirChangeFlag) {
+				this.dir = Dir.randomDir();
+				dirChangeFlag = false;
+			} else {
+				if(CommonUtil.getRandomInt(1000) > 920) {
+					this.dir = Dir.randomDir();
+				}
+			}
+			
+			// 随机开火
+			if(CommonUtil.getRandomInt(1000) > 900) {
+				fire();
+			}
 		}
 	}
-
 	
+	/**
+	 * 坦克发射炮弹方法
+	 */
+	public void fire() {
+		int xTemp = this.x;
+		int yTemp = this.y;
+		
+		switch (dir) {
+		case LEFT:
+			yTemp = yTemp + ResourceMgr.TANK_HEIGHT / 2 - 3;
+			break;
+		case UP:
+			xTemp = xTemp + ResourceMgr.TANK_WIDTH / 2 - 5;
+			break;
+		case RIGHT:
+			xTemp = xTemp + ResourceMgr.TANK_WIDTH - 7;
+			yTemp = yTemp + ResourceMgr.TANK_HEIGHT / 2 - 2;
+			break;
+		case DOWN:
+			xTemp = xTemp + ResourceMgr.TANK_WIDTH / 2 - 6;
+			yTemp = yTemp + ResourceMgr.TANK_HEIGHT - 8;
+			break;
+		}
+		
+		ResourceMgr.BULLET_LIST.add(new Bullet(xTemp, yTemp, this.dir, this.group));
+		
+	}
 	
-
-	
+	/**
+	 * 消亡事件
+	 */
+	public void die() {
+		this.living = false;
+	}
 }

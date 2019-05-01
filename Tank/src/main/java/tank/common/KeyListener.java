@@ -56,7 +56,8 @@ public class KeyListener extends KeyAdapter {
 		case KeyEvent.VK_DOWN:
 			bD = false;
 			break;
-
+		case KeyEvent.VK_Z:
+			myTank.fire();
 		default:
 			break;
 		}

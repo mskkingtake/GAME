@@ -1,9 +1,11 @@
 package tank;
 
 import java.awt.Frame;
+import java.awt.Graphics;
 
 import tank.common.CommonUtil;
 import tank.common.WindowListener;
+import tank.part.Tank;
 
 public class TankFrame extends Frame {
 
@@ -15,5 +17,13 @@ public class TankFrame extends Frame {
 		
 		
 		addWindowListener(new WindowListener());
+	}
+	
+	Tank myTank = new Tank(100,100);
+	
+	
+	@Override
+	public void paint(Graphics g) {
+		myTank.paint(g);
 	}
 }

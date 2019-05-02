@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.Random;
 
+import snake.common.CommonUtil;
 import snake.common.Dir;
 import snake.common.ResourceMgr;
 
@@ -14,6 +15,7 @@ public class Snake extends Part{
 	private int x;
 	private int y;
 	private boolean moving = true;
+	private boolean living = true;
 	private Dir dir = Dir.DOWN;
 
 	private Rectangle rectangle;
@@ -77,17 +79,47 @@ public class Snake extends Part{
 		this.rectangle = rectangle;
 	}
 	
-	
+	public boolean isLiving() {
+		return living;
+	}
 
-	
+	public void setLiving(boolean living) {
+		this.living = living;
+	}
 
 	public void paint(Graphics g) {
 		Color c = g.getColor();
 		g.setColor(Color.WHITE);
+		if(this == ResourceMgr.mySnake) {
+			switch (dir) {
+			case LEFT:
+				g.drawString("贪吃蛇", x - ResourceMgr.SNAKE_WIDTH , y);
+				break;
+			case UP:
+				g.drawString("贪吃蛇", x - ResourceMgr.SNAKE_WIDTH , y);
+				break;
+			case RIGHT:
+				g.drawString("贪吃蛇", x , y);
+				break;
+			case DOWN:
+				g.drawString("贪吃蛇", x - ResourceMgr.SNAKE_WIDTH , y + ResourceMgr.SNAKE_HEIGHT * 2);
+				break;
+			}
+			
+		}
 		
+		Snake snakeTemp;
+		
+		// 贪吃蛇
 		for(Iterator<Snake> it = ResourceMgr.SNAKE_LIST.iterator(); it.hasNext();) {
-			Snake snakeTemp = it.next();
-			g.fillRect(snakeTemp.getX(), snakeTemp.getY(), 10, 10);
+			snakeTemp = it.next();
+			g.fillRect(snakeTemp.getX(), snakeTemp.getY(), ResourceMgr.SNAKE_WIDTH, ResourceMgr.SNAKE_HEIGHT);
+		}
+		
+		// 随机部分
+		for(Iterator<Snake> it = ResourceMgr.SNAKE_PART_LIST.iterator(); it.hasNext();) {
+			snakeTemp = it.next();
+			g.fillRect(snakeTemp.getX(), snakeTemp.getY(), ResourceMgr.SNAKE_WIDTH, ResourceMgr.SNAKE_HEIGHT);
 		}
 		
 		g.setColor(c);
@@ -96,7 +128,7 @@ public class Snake extends Part{
 	}
 	
 	/**
-	 * 坦克的移动
+	 * 贪吃蛇的移动
 	 */
 	private void move() {
 		int xTemp = this.x;
@@ -123,6 +155,21 @@ public class Snake extends Part{
 					y = y + ResourceMgr.SNAKE_SPEED;
 					break;
 				}
+				
+				if(x < 0 || 
+				   y < 0 + 20 || 
+				   x + ResourceMgr.SNAKE_WIDTH > ResourceMgr.GAME_WIDTH || 
+				   y + ResourceMgr.SNAKE_HEIGHT > ResourceMgr.GAME_HEIGHT) {
+					this.living = false;
+				}
+				
+				this.rectangle.setLocation(x, y);
+				
+				//  吃碎块
+				for(int ii = 0; ii < ResourceMgr.SNAKE_PART_LIST.size(); ii++) {
+					Snake snakeTempi = ResourceMgr.SNAKE_PART_LIST.get(ii);
+					snakeTemp.collideWith(snakeTempi);
+				}
 			} else {
 				int xx = xTemp;
 				int yy = yTemp;
@@ -132,43 +179,36 @@ public class Snake extends Part{
 				
 				snakeTemp.setX(xx);
 				snakeTemp.setY(yy);
+				
+				this.rectangle.setLocation(xx, yy);
 			}
 		}
 		
-		
-//		for() {
-//			if(!moving) return ;
-//			
-//			switch (dir) {
-//			case LEFT:
-//				x -= SPEED;
-//				break;
-//			case UP:
-//				y -= SPEED;
-//				break;
-//			case RIGHT:
-//				x += SPEED;
-//				break;
-//			case DOWN:
-//				y += SPEED;
-//				break;
-//			}
-//		}
+		// 蛇身相撞
+		for(int j = 0; j < ResourceMgr.SNAKE_LIST.size(); j++) {
+			Snake snakeTempj = ResourceMgr.SNAKE_LIST.get(j);
+			if(snakeTempj == ResourceMgr.mySnake) {
+				continue;
+			}
+			
+			if(ResourceMgr.mySnake.getX() == snakeTempj.getX() && ResourceMgr.mySnake.getY() == snakeTempj.getY()) {
+				ResourceMgr.mySnake.setLiving(false);
+			}
+		}
 	}
 	
 	/**
 	 * 碰撞检测
 	 * @param tank
 	 */
-	public void collideWith(Snake tank) {
-
-	}
-	
-	/**
-	 * 消亡事件
-	 */
-	@Override
-	public void die() {
-//		this.living = false;
+	public void collideWith(Snake snake) {
+		if(this.getRectangle().intersects(snake.getRectangle())) {
+			ResourceMgr.SNAKE_PART_LIST.remove(snake);
+			ResourceMgr.SNAKE_LIST.add(snake);
+			
+			int x = CommonUtil.getRandomInt(55) * 10 + 50;
+			int y = CommonUtil.getRandomInt(70) * 10 + 50;
+			ResourceMgr.SNAKE_PART_LIST.add(new Snake(x,y, Dir.LEFT, true));
+		}
 	}
 }
